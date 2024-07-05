@@ -3,6 +3,7 @@ import random
 import pickle
 import logging
 from time import sleep
+from credenciales import EMAIL, PASSWORD
 # selenium 4
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
@@ -57,51 +58,50 @@ wait=WebDriverWait(driver, 40)
 def sing_in():
     if os.path.isfile('youtube.cookies'):
         log_cookies()
-    acceder  = wait.until(EC.visibility_of_element_located((By.XPATH, '//ytd-button-renderer[@id="sign-in-button"]')))
-    pause()
-    acceder.click()
+    else:
+        acceder  = wait.until(EC.visibility_of_element_located((By.XPATH, '//ytd-button-renderer[@id="sign-in-button"]')))
+        pause()
+        acceder.click()
 
-    pause()
-    input_email = wait.until(EC.visibility_of_element_located((By.XPATH, '//input[@type="email"]')))
-    pause()
-    input_email.send_keys('adoniscabrera240@gmail.com')
-    logging.warning('Email Ingresado')
+        pause()
+        input_email = wait.until(EC.visibility_of_element_located((By.XPATH, '//input[@type="email"]')))
+        pause()
+        input_email.send_keys(EMAIL)
+        logging.warning('Email Ingresado')
 
-    pause()
-    next_button =  wait.until(EC.visibility_of_element_located((By.XPATH, '//div[@id="identifierNext"]/div/button')))
-    pause()
-    next_button.click()
-    
+        pause()
+        next_button =  wait.until(EC.visibility_of_element_located((By.XPATH, '//div[@id="identifierNext"]/div/button')))
+        pause()
+        next_button.click()
+        
 
-    pause()
-    input_password = next_button =  wait.until(EC.visibility_of_element_located((By.XPATH, '//div/input[@type="password"]')))
-    pause()
-    input_password.send_keys('AdonisEduardo2000')
-    logging.warning('contrasenia Ingresadoa')
-    next_button_pass = wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="passwordNext"]/div/button/span')))
-    pause()
-    next_button_pass.click()
-    save_cookies()
-    sleep(20)
+        pause()
+        input_password = next_button =  wait.until(EC.visibility_of_element_located((By.XPATH, '//div/input[@type="password"]')))
+        pause()
+        input_password.send_keys(PASSWORD)
+        logging.warning('contrasenia Ingresada')
+        next_button_pass = wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="passwordNext"]/div/button/span')))
+        pause()
+        next_button_pass.click()
+        sleep(20)
 
-    
-    pause()
-    not_now_button = wait.until(EC.visibility_of_element_located((By.XPATH, '//div/div[1]/button[1]')))
-    pause()
-    not_now_button.click()
-
-
-
+        
+        pause()
+        not_now_button = wait.until(EC.visibility_of_element_located((By.XPATH, '//div/div[1]/button[1]')))
+        pause()
+        not_now_button.click()
+        pause()
+        save_cookies()
+        sleep(3000)
 
 def save_cookies():
     cookies = driver.get_cookies()
-    pickle.dump(cookies, open('youtube.cookies', 'wb'))
-    # driver.get('https://www.youtube.com/robots.txt')
-    # for cookie in cookies:
-    #     driver.add_cookie(cookie)
-    driver.get('https://www.youtube.com/')
+    pickle.dump(cookies, open('youtube.cookies', '+wb'))
+
 def log_cookies():
-   pickle.load(open('youtube.cookies', 'rb'))
+   cookies=pickle.load(open('youtube.cookies', 'rb'))
+   for cookie in cookies:
+       driver.add_cookie(cookie)
 
 
 # --PAUSE--->
@@ -111,11 +111,11 @@ def pause():
 
 def run():
     sing_in()
+    
 
 
 
 if __name__ == '__main__':
     run()
     print('Fin')
-    while True:
-      pass
+    
